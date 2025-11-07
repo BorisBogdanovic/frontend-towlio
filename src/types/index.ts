@@ -1,0 +1,55 @@
+import { InputHTMLAttributes, MouseEventHandler, ReactNode } from "react";
+
+export interface ButtonProps {
+  type?: "main" | "delete" | "secondary" | "small" | "refresh";
+  children: ReactNode;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  htmlType?: "button" | "submit" | "reset";
+  disabled?: boolean;
+}
+
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  icon?: ReactNode;
+  rightIcon?: ReactNode;
+  className?: string;
+  inputClassName?: string;
+}
+export interface Item {
+  id: number | string;
+  name: string;
+}
+
+export interface DropDownProps {
+  array: Item[];
+  placeholder: string;
+  selectedValue: number | null;
+  onSelect: (val: number | null) => void;
+}
+export type ModalProps = {
+  isOpen: boolean;
+  title?: string;
+  message: string;
+  confirmText?: ReactNode;
+  cancelText?: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+  type?: "main" | "delete" | "secondary" | "small" | "refresh";
+  children?: ReactNode;
+  icon: string;
+  confirmDisabled?: boolean;
+};
+
+export type PawsordModalProps = {
+  isOpen: boolean;
+  title?: string;
+  message: string;
+
+  onCancel: () => void;
+
+  children?: ReactNode;
+  icon: string;
+};
+export interface CarModel {
+  id: number;
+  name: string;
+}
