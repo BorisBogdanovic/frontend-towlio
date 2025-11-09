@@ -11,6 +11,7 @@ import { LoginFormInputs } from "../../types/auth";
 import { useForm } from "react-hook-form";
 import { Ring2 } from "ldrs/react";
 import "ldrs/react/Ring2.css";
+import { trimStrings } from "../../utils/trimString";
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +24,7 @@ function LoginForm() {
 
   const { mutate: login, isPending } = useLogin();
   const onSubmit = (data: LoginFormInputs) => {
-    login(data);
+    login(trimStrings(data));
   };
 
   return (

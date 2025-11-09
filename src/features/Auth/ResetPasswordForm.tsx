@@ -53,8 +53,8 @@ function ResetPasswordForm() {
     resetForgotPassword(
       {
         email: data.email,
-        password: data.newPassword,
-        password_confirmation: data.confirmPassword,
+        password: data.newPassword.trim(),
+        password_confirmation: data.confirmPassword.trim(),
         token: data.token,
       },
       {
@@ -90,6 +90,10 @@ function ResetPasswordForm() {
             minLength: {
               value: 8,
               message: "Password must be at least 8 characters",
+            },
+            pattern: {
+              value: /^\S*$/,
+              message: "Password cannot contain spaces",
             },
             validate: (val) =>
               validatePassword(val) || "Password does not meet criteria",

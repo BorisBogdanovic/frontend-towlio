@@ -169,6 +169,10 @@ function RegisterForm() {
                   value: 8,
                   message: "Password must be at least 8 characters",
                 },
+                pattern: {
+                  value: /^\S*$/,
+                  message: "Password cannot contain spaces",
+                },
                 validate: {
                   hasLowercase: (v) =>
                     /[a-z]/.test(v) ||
@@ -263,7 +267,7 @@ function RegisterForm() {
           </div>
 
           {/* Submit button */}
-          <Button htmlType="submit" type="main">
+          <Button htmlType="submit" type="main" disabled={isLoading}>
             <span className="flex items-center gap-2 whitespace-nowrap">
               {isLoading && (
                 <Ring2
@@ -272,7 +276,7 @@ function RegisterForm() {
                   strokeLength="0.25"
                   bgOpacity="0.1"
                   speed="0.8"
-                  color=""
+                  color="#21409a"
                 />
               )}
               {isLoading ? "Creating account..." : "Register"}

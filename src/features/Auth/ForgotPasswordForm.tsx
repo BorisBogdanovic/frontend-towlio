@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useForgotPassword } from "../../hooks/useForgotPassword";
 import { Ring2 } from "ldrs/react";
 import "ldrs/react/Ring2.css";
+import { trimStrings } from "../../utils/trimString";
 
 function ForgotPasswordForm() {
   const navigate = useNavigate();
@@ -19,8 +20,9 @@ function ForgotPasswordForm() {
     reset();
     navigate("/login");
   });
-  const onSubmit = ({ email }: { email: string }) => {
-    resetPassword(email);
+  const onSubmit = (data: { email: string }) => {
+    const trimmedData = trimStrings(data);
+    resetPassword(trimmedData.email);
   };
 
   return (

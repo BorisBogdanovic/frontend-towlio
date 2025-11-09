@@ -61,6 +61,7 @@ function ClientForm() {
       className="px-4 pt-6 pb-8"
     >
       <div className="flex justify-around gap-8 ">
+        {/* Leva kolona */}
         <div className="w-1/2 flex flex-col gap-8">
           <div className="flex justify-between ">
             <span className="text-sm text-textGray leading-5">Name*</span>
@@ -74,6 +75,16 @@ function ClientForm() {
                     value: 50,
                     message: "Name cannot exceed 50 characters",
                   },
+                  setValueAs: (value: string) => value.trim(),
+                  validate: (value: string) => {
+                    if (/\s/.test(value)) {
+                      return "Name cannot contain spaces";
+                    }
+                    if (!/^[A-Za-zČčĆćŠšĐđŽž]+$/.test(value)) {
+                      return "Name can only contain letters";
+                    }
+                    return true;
+                  },
                 })}
               />
               {errors.client_name && (
@@ -83,6 +94,7 @@ function ClientForm() {
               )}
             </div>
           </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-textGray leading-5">Last Name*</span>
             <div className="relative w-sm">
@@ -94,6 +106,15 @@ function ClientForm() {
                     value: 50,
                     message: "Last name cannot exceed 50 characters",
                   },
+                  validate: (value: string) => {
+                    if (/\s/.test(value)) {
+                      return "Name cannot contain spaces";
+                    }
+                    if (!/^[A-Za-zČčĆćŠšĐđŽž]+$/.test(value)) {
+                      return "Name can only contain letters";
+                    }
+                    return true;
+                  },
                 })}
               />
               {errors.client_last_name && (
@@ -103,6 +124,7 @@ function ClientForm() {
               )}
             </div>
           </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-textGray leading-5">
               Client Address*
@@ -116,6 +138,7 @@ function ClientForm() {
                     value: 255,
                     message: "Address cannot exceed 255 characters",
                   },
+                  setValueAs: (value: string) => value.trim(),
                 })}
               />
               {errors.address && (
@@ -125,6 +148,7 @@ function ClientForm() {
               )}
             </div>
           </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-textGray leading-5">
               Client City*
@@ -138,6 +162,7 @@ function ClientForm() {
                     value: 50,
                     message: "City cannot exceed 50 characters",
                   },
+                  setValueAs: (value: string) => value.trim(),
                 })}
               />
               {errors.city && (
@@ -147,6 +172,7 @@ function ClientForm() {
               )}
             </div>
           </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-textGray leading-5">
               Client Country*
@@ -160,6 +186,7 @@ function ClientForm() {
                     value: 50,
                     message: "Country cannot exceed 50 characters",
                   },
+                  setValueAs: (value: string) => value.trim(),
                 })}
               />
               {errors.country && (
@@ -169,6 +196,7 @@ function ClientForm() {
               )}
             </div>
           </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-textGray leading-5">
               Client Email*
@@ -179,9 +207,10 @@ function ClientForm() {
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                     message: "Invalid email address",
                   },
+                  setValueAs: (value: string) => value.trim(),
                 })}
               />
               {errors.email && (
@@ -191,6 +220,7 @@ function ClientForm() {
               )}
             </div>
           </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-textGray leading-5">
               Client Phone*
@@ -206,6 +236,7 @@ function ClientForm() {
                     value: /^\+?[0-9\-\s]{6,20}$/,
                     message: "Invalid phone number format",
                   },
+                  setValueAs: (value: string) => value.trim(),
                 })}
               />
               {errors.phone && (
@@ -216,6 +247,8 @@ function ClientForm() {
             </div>
           </div>
         </div>
+
+        {/* Desna kolona */}
         <div className="w-1/2 flex flex-col gap-8">
           <div className="flex justify-between">
             <span className="text-sm text-textGray leading-5">Car Brand*</span>
@@ -267,6 +300,7 @@ function ClientForm() {
               )}
             </div>
           </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-textGray leading-5">
               Licence Plate*
@@ -281,6 +315,16 @@ function ClientForm() {
                     value: 50,
                     message: "Licence plate cannot exceed 50 characters",
                   },
+                  setValueAs: (value: string) => value.trim(),
+                  validate: (value: string) => {
+                    if (/\s/.test(value)) {
+                      return "Licence plate cannot contain spaces";
+                    }
+                    if (!/^[A-Za-z0-9-]+$/.test(value)) {
+                      return "Invalid characters in licence plate";
+                    }
+                    return true;
+                  },
                 })}
               />
               {errors.licence_plate && (
@@ -290,9 +334,10 @@ function ClientForm() {
               )}
             </div>
           </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-textGray leading-5">
-              VIN(Viacle Identification Number)*
+              VIN(Vehicle Identification Number)*
             </span>
             <div className="relative w-sm">
               <Input
@@ -312,6 +357,7 @@ function ClientForm() {
                     value: /^[A-HJ-NPR-Z0-9]{17}$/,
                     message: "VIN contains invalid characters",
                   },
+                  setValueAs: (value: string) => value.trim(),
                 })}
               />
               {errors.vin && (
@@ -344,6 +390,7 @@ function ClientForm() {
                       return `Production year cannot be after ${currentYear}`;
                     return true;
                   },
+                  setValueAs: (value: string) => value.trim(),
                 })}
               />
               {errors.production_year && (
@@ -353,6 +400,7 @@ function ClientForm() {
               )}
             </div>
           </div>
+
           <div className="w-1/4 ml-auto">
             <Button htmlType="submit" type="main" disabled={isPending}>
               <span className="flex items-center gap-2 whitespace-nowrap">
