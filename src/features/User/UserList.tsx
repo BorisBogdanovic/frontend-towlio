@@ -28,7 +28,11 @@ function UserList() {
 
   return (
     <>
-      <UserListHeader />
+      <UserListHeader
+        title="Salespeople List"
+        buttonText="Invite User"
+        navigateTo="/create-user"
+      />
       <UserFilters />
 
       {isLoading ? (

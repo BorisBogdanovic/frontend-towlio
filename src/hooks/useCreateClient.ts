@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { createClient } from "../services/clientService";
-import { CreateClientData } from "../types/client";
+import { Client } from "../types/client";
 
 export const useCreateClient = () => {
   return useMutation({
-    mutationFn: (data: CreateClientData) => createClient(data),
+    mutationFn: (data: Client) => createClient(data),
 
     onError: (error: unknown) => {
       if (error instanceof Error) {
