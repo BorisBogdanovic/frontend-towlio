@@ -1,30 +1,38 @@
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../app/store";
+import { getProfileImageUrl } from "../../utils/getProfileImageUrl";
+import { useEffect } from "react";
+import { clearSelectedUser } from "./ChatSlice";
+import EmptyChatPlaceholder from "./EmptyChatPlaceholder";
+import ChatHeader from "./ChatHeader";
+import ChatMessages from "./ChatMessages";
+import ChatInput from "./ChatInput";
+import { useSendChatMessage } from "../../hooks/useSendChatMessage";
+
 function ChatWindow() {
+  const selectedUser = useSelector(
+    (state: RootState) => state.chat.selectedUser
+  );
+  const dispatch = useDispatch();
+
+  const { mutate: sendMessage } = useSendChatMessage(selectedUser?.id ?? 0);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearSelectedUser());
+    };
+  }, [dispatch]);
+
+  if (!selectedUser) return <EmptyChatPlaceholder />;
+
   return (
-    <div className="flex-1 h-full flex flex-col bg-gray-50">
-      {/* Header */}
-      <div className="p-4 border-b border-gray-200 flex items-center gap-3 bg-white">
-        <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
-        <p className="font-medium">Chat with John Doe</p>
-      </div>
-
-      {/* Messages area */}
-      <div className="flex-1 p-4 overflow-y-auto">
-        <p className="text-gray-500">Select a conversation to start.</p>
-      </div>
-
-      {/* Input */}
-      <div className="p-4 border-t border-gray-200 bg-white">
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="Type a message..."
-            className="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:outline-none"
-          />
-          <button className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark">
-            Send
-          </button>
-        </div>
-      </div>
+    <div className="flex-1 h-full min-w-0 flex flex-col bg-gray-50">
+      <ChatHeader
+        selectedUser={selectedUser}
+        getProfileImageUrl={getProfileImageUrl}
+      />
+      <ChatMessages contactId={selectedUser.id} />
+      <ChatInput onSend={sendMessage} />
     </div>
   );
 }
