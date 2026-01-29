@@ -2,7 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer, { setCredentials } from "../features/Auth/authSlice";
 import userReducer from "../features/User/userSlice";
 import clientReducer from "../features/Client/clientSlice";
-import chatReducer from "../features/Chat/ChatSlice";
+import chatReducer from "../features/Chat/chatSlice";
+import notificationsReducer from "../features/AppTopBar/notificationsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     user: userReducer,
     client: clientReducer,
     chat: chatReducer,
+    notifications: notificationsReducer,
   },
 });
 
