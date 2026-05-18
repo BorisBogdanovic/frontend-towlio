@@ -7,18 +7,16 @@ import { useUpdatePassword } from "../../hooks/useEditPassword";
 import Button from "../../ui/Button";
 import { Ring2 } from "ldrs/react";
 import "ldrs/react/Ring2.css";
-
 import { UpdatePasswordInput } from "../../types/user";
 
 function EditPasswordForm({ onSuccess }: { onSuccess: () => void }) {
-  const [showCurrentPassword, setShowCurrentPassword] =
-    useState<boolean>(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { register, handleSubmit, watch, reset } =
     useForm<UpdatePasswordInput>();
+
   const { mutate: editPassword, isPending: isChangingPassword } =
     useUpdatePassword();
 
@@ -37,16 +35,15 @@ function EditPasswordForm({ onSuccess }: { onSuccess: () => void }) {
           reset();
           onSuccess();
         },
-      }
+      },
     );
   };
 
-  /////////////////////////////////////////////////////////
   const currentPassword = watch("current_password");
   const newPassword = watch("password");
   const confirmPassword = watch("password_confirmation");
 
-  const isChangePasswordDisabled =
+  const isDisabled =
     !currentPassword ||
     !newPassword ||
     !confirmPassword ||
@@ -54,27 +51,28 @@ function EditPasswordForm({ onSuccess }: { onSuccess: () => void }) {
     !validatePassword(newPassword);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-col gap-4 w-sm mx-auto">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+      {/* INPUTS */}
+      <div className="flex w-full flex-col gap-4">
         <Input
           placeholder="Current Password"
           type={showCurrentPassword ? "text" : "password"}
           {...register("current_password", { required: true })}
-          icon={<HiLockClosed color="#667085" size={24} />}
+          icon={<HiLockClosed size={20} />}
           rightIcon={
             <button
               type="button"
               onClick={() => setShowCurrentPassword((prev) => !prev)}
-              className="focus:outline-none"
             >
               {showCurrentPassword ? (
-                <HiEyeSlash color="#667085" size={24} />
+                <HiEyeSlash size={20} />
               ) : (
-                <HiEye color="#667085" size={24} />
+                <HiEye size={20} />
               )}
             </button>
           }
         />
+
         <Input
           placeholder="New Password"
           type={showPassword ? "text" : "password"}
@@ -83,21 +81,17 @@ function EditPasswordForm({ onSuccess }: { onSuccess: () => void }) {
             minLength: 8,
             validate: (val) => validatePassword(val),
           })}
-          icon={<HiLockClosed color="#667085" size={24} />}
+          icon={<HiLockClosed size={20} />}
           rightIcon={
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="focus:outline-none"
             >
-              {showPassword ? (
-                <HiEyeSlash color="#667085" size={24} />
-              ) : (
-                <HiEye color="#667085" size={24} />
-              )}
+              {showPassword ? <HiEyeSlash size={20} /> : <HiEye size={20} />}
             </button>
           }
         />
+
         <Input
           placeholder="Confirm New Password"
           type={showConfirmPassword ? "text" : "password"}
@@ -106,60 +100,51 @@ function EditPasswordForm({ onSuccess }: { onSuccess: () => void }) {
             validate: (val) =>
               val === watch("password") || "Passwords do not match",
           })}
-          icon={<HiLockClosed color="#667085" size={24} />}
+          icon={<HiLockClosed size={20} />}
           rightIcon={
             <button
               type="button"
               onClick={() => setShowConfirmPassword((prev) => !prev)}
-              className="focus:outline-none"
             >
               {showConfirmPassword ? (
-                <HiEyeSlash color="#667085" size={24} />
+                <HiEyeSlash size={20} />
               ) : (
-                <HiEye color="#667085" size={24} />
+                <HiEye size={20} />
               )}
             </button>
           }
         />
       </div>
 
-      <div className="px-4 py-3 flex items-center justify-end gap-3 bg-sectionBg border-t border-disabledBorderGray mt-6">
-        <div className="w-[150px]">
-          <Button
-            type="secondary"
-            onClick={() => {
-              reset();
-              onSuccess();
-            }}
-          >
-            Cancel
-          </Button>
-        </div>
+      {/* FOOTER */}
+      <div className="mt-6 flex items-center justify-end gap-3 border-t border-disabledBorderGray pt-4">
+        <Button
+          type="secondary"
+          onClick={() => {
+            reset();
+            onSuccess();
+          }}
+        >
+          Cancel
+        </Button>
 
-        <div className="w-[150px]">
-          <Button
-            type="main"
-            htmlType="submit"
-            disabled={isChangePasswordDisabled}
-          >
-            {isChangingPassword ? (
-              <div className="flex items-center gap-2">
-                <Ring2
-                  size="24"
-                  stroke="3"
-                  strokeLength="0.25"
-                  bgOpacity="0.1"
-                  speed="0.8"
-                  color="white"
-                />
-
-                <span>...changing</span>
-              </div>
-            ) : (
-              "Change Password"
-            )}
-          </Button>
-        </div>
+        <Button type="main" htmlType="submit" disabled={isDisabled}>
+          {isChangingPassword ? (
+            <div className="flex items-center gap-2">
+              <Ring2
+                size="18"
+                stroke="3"
+                strokeLength="0.25"
+                bgOpacity="0.1"
+                speed="0.8"
+                color="white"
+              />
+              <span>Changing...</span>
+            </div>
+          ) : (
+            "Change Password"
+          )}
+        </Button>
       </div>
     </form>
   );

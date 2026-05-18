@@ -1,82 +1,116 @@
-import { ChatMessage, ChatMessagesResponse, ChatUser } from "../types/chat";
+import {
+  ChatMessagesResponse,
+  ChatUser,
+  SendChatMessageResponse,
+  ApiChatMessagesResponse,
+} from "../types/chat";
 import { getAuthToken } from "../utils/auth";
 import { API_URL } from "./apiConfig";
+import { mapChatMessage } from "./chatMapper";
 
-export const fetchChatUsers = async (): Promise<ChatUser[]> => {
-  try {
-    const token = getAuthToken();
-    if (!token) throw new Error("No auth token found");
+// --- Chat Users ---
+export const fetchChatUsers = async (
+  search: string = "",
+): Promise<ChatUser[]> => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found");
 
-    const response = await fetch(`${API_URL}/chat/users`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const query = search ? `?search=${encodeURIComponent(search)}` : "";
 
-    if (!response.ok) {
-      const errorBody = await response.json().catch(() => ({}));
-      throw new Error(errorBody.message || "Failed to fetch chat users");
+  const response = await fetch(`${API_URL}/chat/users${query}`, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    let message = "Failed to fetch chat users";
+
+    try {
+      const errorBody = await response.json();
+      message = errorBody?.message || message;
+    } catch (err) {
+      console.error("Error parsing response:", err);
     }
 
-    const data = await response.json();
-    return data.data;
-  } catch (error) {
-    console.error("Failed to fetch chat users:", error);
-    throw error;
+    throw new Error(message);
   }
+
+  const data = await response.json();
+  return data.data;
 };
-////////////////////////////////////////////////////////////////////////////////
-export const sendChatMessage = async (
-  to_id: number,
-  message: string
-): Promise<ChatMessagesResponse> => {
-  try {
-    const token = getAuthToken();
-    if (!token) throw new Error("No auth token found");
 
-    const payload = {
-      to_id,
-      message,
-      type: "text",
-      file_path: null,
-      file_name: null,
-      file_size: null,
-      voice_duration: null,
-    };
+// --- Send Message ---
+export const sendChatMessage = async ({
+  to_id,
+  message,
+  type = "text",
+  file,
+}: {
+  to_id: number;
+  message?: string;
+  type?: "text" | "image" | "file";
+  file?: File;
+}): Promise<SendChatMessageResponse> => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found");
 
-    const response = await fetch(`${API_URL}/chat/send`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
+  const formData = new FormData();
+  formData.append("to_id", String(to_id));
+  formData.append("type", type);
 
-    if (!response.ok) {
-      const errorBody = await response.json().catch(() => ({}));
-      throw new Error(errorBody.message || "Failed to send message");
+  if (type === "text") {
+    const text = message?.trim();
+    if (!text) throw new Error("Message cannot be empty");
+    formData.append("message", text);
+  } else if (file) {
+    formData.append("file", file);
+  }
+
+  const response = await fetch(`${API_URL}/chat/send`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    let errorMessage = "Failed to send message";
+
+    try {
+      const errorBody = await response.json();
+
+      if (errorBody?.errors) {
+        const firstError = Object.values(errorBody.errors)[0];
+
+        if (Array.isArray(firstError) && firstError.length > 0) {
+          errorMessage = firstError[0];
+        }
+      } else if (errorBody?.message) {
+        errorMessage = errorBody.message;
+      }
+    } catch (err) {
+      console.error("Error parsing response:", err);
     }
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to send chat message:", error);
-    throw error;
+    throw new Error(errorMessage);
   }
-};
-////////////////////////////////////////////////////////////////////////////////
 
+  const data = await response.json();
+  return data as SendChatMessageResponse;
+};
+
+// --- Chat Messages ---
 export const fetchChatMessages = async (
-  contactId: number
+  contactId: number,
 ): Promise<ChatMessagesResponse> => {
   const token = getAuthToken();
   if (!token) throw new Error("No auth token");
 
   const response = await fetch(`${API_URL}/chat/messages/${contactId}`, {
-    method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
@@ -84,29 +118,49 @@ export const fetchChatMessages = async (
   });
 
   if (!response.ok) {
-    const errorBody = await response.json().catch(() => ({}));
-    throw new Error(errorBody.message || "Failed to fetch messages");
+    let message = "Failed to fetch messages";
+
+    try {
+      const errorBody = await response.json();
+      message = errorBody?.message || message;
+    } catch (err) {
+      console.error("Error parsing response:", err);
+    }
+
+    throw new Error(message);
   }
 
-  const data = await response.json();
-
-  const messages: ChatMessage[] = (data.messages ?? []).map((msg: any) => ({
-    id: msg.id,
-    from_id: msg.from_id,
-    to_id: msg.to_id,
-    type: msg.type,
-    message: msg.message,
-    file_path: msg.file_path,
-    file_name: msg.file_name,
-    file_size: msg.file_size,
-    voice_duration: msg.voice_duration,
-    read_at: msg.read_at,
-    created_at: msg.created_at,
-    updated_at: msg.updated_at,
-  }));
+  const data: ApiChatMessagesResponse = await response.json();
 
   return {
     contact: data.contact,
-    messages,
+    messages: data.messages.map(mapChatMessage),
   };
+};
+
+// --- Mark As Read ---
+export const markChatAsRead = async (contactId: number): Promise<void> => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found");
+
+  const response = await fetch(`${API_URL}/chat/read/${contactId}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    let message = "Failed to mark chat as read";
+
+    try {
+      const errorBody = await response.json();
+      message = errorBody?.message || message;
+    } catch (err) {
+      console.error("Error parsing response:", err);
+    }
+
+    throw new Error(message);
+  }
 };

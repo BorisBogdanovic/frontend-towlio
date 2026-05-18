@@ -1,15 +1,13 @@
-import React from "react";
-
 type User = {
   name: string;
   last_name: string;
   profile_image_path: string;
 };
 
-type ChatHeaderProps = {
+interface ChatHeaderProps {
   selectedUser: User | null;
   getProfileImageUrl: (path: string) => string;
-};
+}
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
   selectedUser,
@@ -17,15 +15,18 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 }) => {
   if (!selectedUser) return null;
 
+  const { name, last_name, profile_image_path } = selectedUser;
+
   return (
-    <div className="p-4 border-b border-gray-200 flex items-center gap-3 bg-white">
+    <div className="flex items-center gap-3 border-b border-gray-200 bg-white p-4">
       <img
-        src={getProfileImageUrl(selectedUser.profile_image_path)}
-        alt={`${selectedUser.name} ${selectedUser.last_name}`}
-        className="w-10 h-10 rounded-full object-cover bg-gray-300"
+        src={getProfileImageUrl(profile_image_path)}
+        alt={`${name} ${last_name}`}
+        className="h-10 w-10 rounded-full bg-gray-300 object-cover"
       />
-      <p className="font-medium">
-        {selectedUser.name} {selectedUser.last_name}
+
+      <p className="font-medium text-gray-800">
+        {name} {last_name}
       </p>
     </div>
   );

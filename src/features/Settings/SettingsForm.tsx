@@ -29,7 +29,7 @@ function SettingsForm() {
   const { mutate, isPending } = useEditUser();
   const { mutate: updateAvatar } = useUpdateUserAvatar();
   const [previewUrl, setPreviewUrl] = useState<string | null>(
-    getProfileImageUrl(user?.profile_image_path)
+    getProfileImageUrl(user?.profile_image_path),
   );
   const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
 
@@ -85,8 +85,8 @@ function SettingsForm() {
                 if (data?.data?.profile_image_path) {
                   setPreviewUrl(
                     `${getProfileImageUrl(
-                      data.data.profile_image_path
-                    )}?t=${Date.now()}`
+                      data.data.profile_image_path,
+                    )}?t=${Date.now()}`,
                   );
                 }
 
@@ -103,11 +103,11 @@ function SettingsForm() {
         },
         onError: (error) => {
           toast.error(
-            error.message || "Failed to update profile. Please try again."
+            error.message || "Failed to update profile. Please try again.",
           );
           console.error(error);
         },
-      }
+      },
     );
   };
   /////////////////////////////////////////////////////////////////////////////////////
@@ -234,14 +234,19 @@ function SettingsForm() {
 
       {/* //////////////////////////////////////////////////////////////MODAL*/}
       <ChangePasswordModal
-        onCancel={() => {
-          setIsPasswordModalOpen(false);
-        }}
+        onCancel={() => setIsPasswordModalOpen(false)}
         isOpen={isPasswordModalOpen}
         icon={passwordImg}
         title="Change Password"
-        message="Password: min 8 chars, uppercase, lowercase, number & special char."
       >
+        <div className="w-full rounded-xl bg-slate-100 px-4 py-3">
+          <p className="text-xs leading-6 text-slate-500">
+            Your password must be at least 8 characters and include uppercase
+            letters, lowercase letters, numbers and a special character (e.g.
+            !@#$%^&*).
+          </p>
+        </div>
+
         <EditPasswordForm onSuccess={() => setIsPasswordModalOpen(false)} />
       </ChangePasswordModal>
     </>

@@ -1,14 +1,15 @@
 import { HiOutlineBell } from "react-icons/hi2";
 
-function EmptyNotifications() {
+const EmptyNotifications = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-gray-400 px-4 mt-6">
-      <HiOutlineBell className="h-10 w-10 mb-3 text-gray-300" />
-      <p className="text-sm text-center">
+    <div className="mt-6 flex h-full flex-col items-center justify-center px-4 text-gray-400">
+      <HiOutlineBell className="mb-3 h-10 w-10 text-gray-300" />
+
+      <p className="text-center text-sm">
         You have no notifications at the moment.
       </p>
     </div>
   );
-}
+};
 
 export default EmptyNotifications;

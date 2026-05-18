@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FullPageSpinner from "./ui/FullPageSpinner";
@@ -7,18 +7,21 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./pages/layouts/MainLayout";
 import { Toaster } from "react-hot-toast";
 import AdminRoute from "./routes/AdminRoute";
-
-import { Provider } from "react-redux";
-import { store } from "./app/store";
-
+import { Provider, useSelector } from "react-redux";
+import { store, RootState } from "./app/store";
 import useNotifications from "./hooks/useNotifications";
+import { initPusher, disconnectPusher } from "./lib/pusher";
+import { useChatUsers } from "./hooks/useChatUsers";
+import { useOnlineUsers } from "./hooks/useOnlineUsers";
+import { useChatRealtime } from "./hooks/useChatRealtime";
+import { initSounds } from "./utils/sound";
 
 const AuthLayout = lazy(() => import("./pages/layouts/AuthLayout"));
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
 const CreateUser = lazy(() => import("./pages/InviteUser"));
 const UserList = lazy(() => import("./pages/Users"));
-const Register = lazy(() => import("./pages/Register"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
@@ -30,16 +33,64 @@ const Client = lazy(() => import("./pages/Clients"));
 const ExpiredPage = lazy(() => import("./pages/ExpiredPage"));
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 0 } },
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 30,
+    },
+  },
 });
 
 function AppContent() {
-  // ✅ OVO JE SVE: realtime listener jednom za ceo app
-  useNotifications();
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  useEffect(() => {
+    if (token) initPusher(token);
+    else disconnectPusher();
+  }, [token]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Toaster position="bottom-right" />
+      <AppInner />
+    </QueryClientProvider>
+  );
+}
+
+function AppInner() {
+  useChatUsers("");
+  useNotifications();
+  useChatRealtime();
+  useOnlineUsers();
+
+  useEffect(() => {
+    initSounds();
+  }, []);
+
+  return (
+    <>
+      <Toaster
+        position="bottom-right"
+        gutter={12}
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: "#114b5f",
+            color: "#fff",
+            padding: "12px 16px",
+            borderRadius: "12px",
+            border: "1px solid rgba(255,255,255,0.1)",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+            fontSize: "14px",
+          },
+          success: {
+            style: { background: "#1a936f" },
+            iconTheme: { primary: "#fff", secondary: "#1a936f" },
+          },
+          error: {
+            style: { background: "#dc2626" },
+            iconTheme: { primary: "#fff", secondary: "#dc2626" },
+          },
+        }}
+      />
 
       <BrowserRouter>
         <Suspense fallback={<FullPageSpinner />}>
@@ -128,7 +179,7 @@ function AppContent() {
           </Routes>
         </Suspense>
       </BrowserRouter>
-    </QueryClientProvider>
+    </>
   );
 }
 

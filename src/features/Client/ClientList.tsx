@@ -142,7 +142,7 @@ function ClientList() {
                           <div className="w-10 h-10 flex-shrink-0 rounded-full overflow-hidden border-2 border-primary">
                             <img
                               src={getProfileImageUrl(
-                                client.sales_person?.profile_image_path
+                                client.sales_person?.profile_image_path,
                               )}
                               alt="profile"
                               className="w-full h-full object-cover"

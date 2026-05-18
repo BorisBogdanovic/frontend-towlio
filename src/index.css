@@ -32,6 +32,7 @@
   --color-pendingText: #a15c07;
   --color-activeBg: #ecfdf3;
   --color-activeText: #027a48;
+  --color-heading: #1d2939;
 }
 body {
   font-family: Inter, sans-serif;

@@ -42,7 +42,7 @@ export type ModalProps = {
 export type PawsordModalProps = {
   isOpen: boolean;
   title?: string;
-  message: string;
+  message?: string;
 
   onCancel: () => void;
 

@@ -7,6 +7,11 @@ export interface Notification {
   message: string;
   createdAt: string;
   unread: boolean;
+  sender?: {
+    id?: string;
+    name: string;
+    avatar?: string | null;
+  };
 }
 
 interface NotificationsState {
@@ -23,16 +28,23 @@ const notificationsSlice = createSlice({
   name: "notifications",
   initialState,
   reducers: {
-    setNotifications(state, action: PayloadAction<Notification[]>) {
-      state.items = action.payload;
-      state.unreadCount = action.payload.filter((n) => n.unread).length;
+    setNotifications(state, { payload }: PayloadAction<Notification[]>) {
+      state.items = payload;
+      state.unreadCount = payload.reduce(
+        (count, n) => count + (n.unread ? 1 : 0),
+        0,
+      );
     },
-    addNotification(state, action: PayloadAction<Notification>) {
-      state.items.unshift(action.payload);
-      if (action.payload.unread) state.unreadCount += 1;
+
+    addNotification(state, { payload }: PayloadAction<Notification>) {
+      state.items.unshift(payload);
+      if (payload.unread) state.unreadCount += 1;
     },
+
     markAllAsRead(state) {
-      state.items.forEach((n) => (n.unread = false));
+      state.items.forEach((n) => {
+        n.unread = false;
+      });
       state.unreadCount = 0;
     },
   },

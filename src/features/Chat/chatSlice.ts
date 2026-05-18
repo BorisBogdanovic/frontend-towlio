@@ -1,36 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface User {
-  id: number;
-  name: string;
-  last_name: string;
-  profile_image_path: string;
-}
-
-interface Message {
-  id: number;
-  from_id: number;
-  to_id: number;
-  message: string;
-  type: string; // npr. "text"
-  created_at: string;
-}
+import { ChatUser, ChatMessage } from "../../types/chat";
 
 interface ChatState {
-  selectedUser: User | null;
-  messages: Message[];
+  selectedUser: ChatUser | null;
+  messages: ChatMessage[];
+  onlineUsers: number[];
 }
 
 const initialState: ChatState = {
   selectedUser: null,
   messages: [],
+  onlineUsers: [],
 };
 
 const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    setSelectedUser(state, action: PayloadAction<User | null>) {
+    setSelectedUser(state, action: PayloadAction<ChatUser | null>) {
       state.selectedUser = action.payload;
       state.messages = [];
     },
@@ -40,17 +27,42 @@ const chatSlice = createSlice({
       state.messages = [];
     },
 
-    setMessages(state, action: PayloadAction<Message[]>) {
-      state.messages = action.payload; // NOVO
+    setMessages(state, action: PayloadAction<ChatMessage[]>) {
+      state.messages = action.payload;
     },
 
-    addMessage(state, action: PayloadAction<Message>) {
+    addMessage(state, action: PayloadAction<ChatMessage>) {
       state.messages.push(action.payload);
+    },
+
+    setOnlineUsers(state, action: PayloadAction<number[]>) {
+      state.onlineUsers = action.payload;
+    },
+
+    addOnlineUser(state, action: PayloadAction<number>) {
+      const userId = action.payload;
+
+      if (!state.onlineUsers.includes(userId)) {
+        state.onlineUsers.push(userId);
+      }
+    },
+
+    removeOnlineUser(state, action: PayloadAction<number>) {
+      const userId = action.payload;
+
+      state.onlineUsers = state.onlineUsers.filter((id) => id !== userId);
     },
   },
 });
 
-export const { setSelectedUser, clearSelectedUser, setMessages, addMessage } =
-  chatSlice.actions;
+export const {
+  setSelectedUser,
+  clearSelectedUser,
+  setMessages,
+  addMessage,
+  setOnlineUsers,
+  addOnlineUser,
+  removeOnlineUser,
+} = chatSlice.actions;
 
 export default chatSlice.reducer;

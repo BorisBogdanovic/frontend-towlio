@@ -5,7 +5,7 @@ import { RootState } from "../app/store";
 
 export const useUsers = () => {
   const { page, city, status, search } = useSelector(
-    (state: RootState) => state.user
+    (state: RootState) => state.user,
   );
 
   return useQuery({

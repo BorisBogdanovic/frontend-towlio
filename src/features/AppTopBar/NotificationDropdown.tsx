@@ -1,48 +1,50 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../../app/store";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../app/store";
+
 import NotificationFooter from "./NotificationFooter";
 import NotificationItem from "./NotificationItem";
 import NotificationHeader from "./NotificationHeader";
 import EmptyNotifications from "./EmptyNotifications";
-import { markAllAsRead } from "../AppTopBar/notificationsSlice";
 
-function NotificationDropdown() {
-  const dispatch = useDispatch<AppDispatch>();
+const NotificationDropdown = () => {
+  const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
 
   const notifications = useSelector(
     (state: RootState) => state.notifications.items,
   );
+
   const unreadCount = useSelector(
     (state: RootState) => state.notifications.unreadCount,
   );
 
-  const handleMarkAllAsRead = () => {
-    dispatch(markAllAsRead());
-  };
+  const filteredNotifications =
+    activeTab === "unread"
+      ? notifications.filter((n) => n.unread)
+      : notifications;
 
-  const handleNotificationClick = (id: string) => {
-    // ovde kasnije: navigate / open detalje / markSingleAsRead(id)
-    // trenutno ništa
-    console.log("clicked notification:", id);
-  };
+  // const handleNotificationClick = (_id: string) => {
+  //   // future: navigation / open details
+  // };
 
   return (
-    <div className="relative z-10 w-full overflow-hidden rounded-b-md border border-gray-200 bg-white shadow-lg flex flex-col">
+    <div className="relative z-10 flex w-full flex-col overflow-hidden rounded-b-md border border-gray-200 bg-white shadow-lg">
       <NotificationHeader
         unreadCount={unreadCount}
-        onMarkAllAsRead={handleMarkAllAsRead}
+        activeTab={activeTab}
+        onChangeTab={setActiveTab}
       />
 
       <div className="flex-1 min-h-[360px] max-h-[360px] overflow-y-auto px-2 py-2">
-        {notifications.length === 0 ? (
+        {filteredNotifications.length === 0 ? (
           <EmptyNotifications />
         ) : (
           <div className="flex flex-col gap-2">
-            {notifications.map((n) => (
+            {filteredNotifications.map((notification) => (
               <NotificationItem
-                key={n.id}
-                notification={n}
-                onClick={() => handleNotificationClick(n.id)}
+                key={notification.id}
+                notification={notification}
+                // onClick={() => handleNotificationClick(notification.id)}
               />
             ))}
           </div>
@@ -52,6 +54,6 @@ function NotificationDropdown() {
       <NotificationFooter />
     </div>
   );
-}
+};
 
 export default NotificationDropdown;
