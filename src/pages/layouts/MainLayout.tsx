@@ -8,13 +8,18 @@ import Sidebar from "../../features/Sidebar/Sidebar";
 
 function MainLayout() {
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="ml-[320px] w-full bg-white flex flex-col min-h-screen relative">
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <div className="w-[320px] shrink-0">
+        <Sidebar />
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 bg-white flex flex-col relative">
         <GrediantBg />
         <AppTopBar />
 
-        <main className="relative z-10 p-6 flex-1 overflow-y-auto">
+        <main className="relative z-10 p-4 sm:p-6 flex-1 overflow-y-auto">
           <Container>
             <Content>
               <Outlet />
