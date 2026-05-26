@@ -1,39 +1,172 @@
 @import "tailwindcss";
 
+/* ===================== */
+/* FONTS */
+/* ===================== */
+
 @font-face {
   font-family: "Inter";
   src: url("../src/assets/fonts/Inter_24pt-Regular.ttf") format("truetype");
   font-weight: 400;
-  font-style: normal;
 }
+
 @font-face {
   font-family: "Inter";
   src: url("../src/assets/fonts/Inter_24pt-Medium.ttf") format("truetype");
   font-weight: 500;
-  font-style: normal;
 }
 
+/* ===================== */
+/* THEME VARIABLES */
+/* ===================== */
+
+/* 🌞 LIGHT */
 @theme {
   --color-primary: #21409a;
+  --color-primaryHover: #1c3683;
+
   --color-secondary: #f2f4f7;
   --color-secondaryHover: #eaecf0;
-  --color-primaryHover: #1c3683;
+
   --color-textGray: #344054;
   --color-textLightGray: #98a2b3;
+  --color-heading: #1d2939;
+
   --color-sectionBg: #f9fafb;
+
   --color-borderGray: #475467;
   --color-disabledBorderGray: #d0d5dd;
+
+  --color-iconColor: #667085;
+
   --color-bdoBlueDark: #141e30;
   --color-bdoBlueLight: #2a5298;
+
   --color-bdoRed: #d92d20;
   --color-bdoRedHover: #b9261b;
-  --color-iconColor: #667085;
+
   --color-pendingBg: #fefbe8;
   --color-pendingText: #a15c07;
+
   --color-activeBg: #ecfdf3;
   --color-activeText: #027a48;
-  --color-heading: #1d2939;
+
+  --sidebar-bg: #ffffff;
+
+  /* 🔥 NEW SYSTEM */
+  --gradient-bg: linear-gradient(
+    to bottom,
+    var(--color-bdoBlueDark),
+    var(--color-bdoBlueLight)
+  );
+
+  --gradient-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.18);
+
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
 }
+
+/* 🌙 DARK */
+.dark {
+  --color-primary: #2563eb;
+
+  --color-secondary: #0f1e30;
+  --color-secondaryHover: #243041;
+
+  --color-textGray: #94a3b8;
+  --color-textLightGray: #94a3b8;
+  --color-heading: #f1f5f9;
+
+  --color-sectionBg: #020b1b;
+
+  --color-borderGray: #334155;
+  --color-disabledBorderGray: #334155;
+
+  --color-iconColor: #94a3b8;
+
+  --sidebar-bg: #071324;
+
+  --color-bdoBlueDark: #0b1a2b;
+  --color-bdoBlueLight: #1e293b;
+
+  --color-pendingBg: #fefbe8;
+  --color-pendingText: #a15c07;
+
+  --color-activeBg: #064e3b;
+  --color-activeText: #34d399;
+
+  /* 🔥 OVDE JE MAGIJA */
+  --gradient-bg: #020b1b;
+  --gradient-shadow: none;
+
+  --scrollbar-thumb: #475569;
+  --scrollbar-thumb-hover: #64748b;
+}
+
+/* ===================== */
+/* GLOBAL TEXT FIX */
+/* ===================== */
+
+:root {
+  color: var(--color-textGray);
+}
+
+/* ===================== */
+/* BASE */
+/* ===================== */
+
 body {
-  font-family: Inter, sans-serif;
+  font-family: "Inter", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===================== */
+/* SAFE TRANSITIONS */
+/* ===================== */
+
+.theme-transition {
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease,
+    border-color 0.12s ease;
+}
+
+/* ===================== */
+/* GRADIENT COMPONENT */
+/* ===================== */
+
+.gradient-bg {
+  background: var(--gradient-bg);
+  box-shadow: var(--gradient-shadow);
+}
+
+/* ===================== */
+/* SCROLLBAR */
+/* ===================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+/* FIREFOX */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }

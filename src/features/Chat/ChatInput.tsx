@@ -87,7 +87,13 @@ const ChatInput: React.FC<ChatInputProps> = ({
   };
 
   return (
-    <div className="border-t border-gray-200 bg-white px-4 py-3">
+    <div
+      className="
+      border-t border-gray-200 bg-white px-4 py-3
+      dark:border-[var(--color-borderGray)]
+      dark:bg-[var(--color-sectionBg)]
+    "
+    >
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex items-center gap-2"
@@ -95,17 +101,34 @@ const ChatInput: React.FC<ChatInputProps> = ({
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-10 w-10 items-center justify-center text-gray-500 hover:text-primary"
+          className="
+            flex h-10 w-10 items-center justify-center
+            text-gray-500 hover:text-primary
+            dark:text-[var(--color-iconColor)]
+            dark:hover:text-white
+          "
         >
           <HiPaperClip className="h-5 w-5" />
         </button>
 
-        <div className="relative flex flex-1 items-center rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
+        <div
+          className="
+          relative flex flex-1 items-center rounded-xl
+          border border-gray-200 bg-gray-50 px-3 py-2
+
+          dark:border-[var(--color-borderGray)]
+          dark:bg-[var(--color-secondary)]
+        "
+        >
           <input
             type="text"
             placeholder="Write a message..."
             autoComplete="off"
-            className="flex-1 border-none bg-transparent text-sm outline-none focus:ring-0"
+            className="
+              flex-1 border-none bg-transparent text-sm
+              outline-none focus:ring-0
+              dark:text-gray-300
+            "
             {...register("message")}
           />
 
@@ -133,11 +156,17 @@ const ChatInput: React.FC<ChatInputProps> = ({
             }}
           />
 
-          <div className="ml-2 flex items-center gap-2 text-gray-400">
+          <div
+            className="
+            ml-2 flex items-center gap-2
+            text-gray-400
+            dark:text-[var(--color-iconColor)]
+          "
+          >
             <button
               type="button"
               onClick={() => setShowEmoji((p) => !p)}
-              className="transition hover:text-primary"
+              className="transition hover:text-primary dark:hover:text-white"
             >
               <HiFaceSmile className="h-5 w-5" />
             </button>
@@ -145,14 +174,18 @@ const ChatInput: React.FC<ChatInputProps> = ({
             <button
               type="button"
               onClick={() => imageInputRef.current?.click()}
-              className="transition hover:text-primary"
+              className="transition hover:text-primary dark:hover:text-white"
             >
               <HiPhoto className="h-5 w-5" />
             </button>
 
             <button
               type="submit"
-              className="ml-1 flex h-9 w-9 items-center justify-center rounded-md bg-primary text-white transition hover:opacity-90"
+              className="
+                ml-1 flex h-9 w-9 items-center justify-center
+                rounded-md bg-primary text-white
+                transition hover:opacity-90
+              "
             >
               <HiPaperAirplane className="-rotate-12 h-4 w-4" />
             </button>

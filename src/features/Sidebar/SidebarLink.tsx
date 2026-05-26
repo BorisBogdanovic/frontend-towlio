@@ -16,7 +16,6 @@ export default function SidebarLink({
   nested,
   unreadCount,
 }: Props) {
-  // 🔥 ključna logika
   const hasUnread = (unreadCount ?? 0) > 0;
 
   return (
@@ -25,7 +24,9 @@ export default function SidebarLink({
         className={`
           mb-2 flex items-center rounded-lg py-2
           ${nested ? "pl-10" : "pl-3"}
-          cursor-pointer transition-all hover:bg-sectionBg
+          cursor-pointer transition-all
+          hover:bg-[var(--color-sectionBg)]
+          dark:hover:bg-[var(--color-secondary)]
         `}
       >
         {icon}
@@ -34,13 +35,16 @@ export default function SidebarLink({
           <span
             className={`
               text-base leading-6
-              ${hasUnread ? "text-primary font-semibold" : "text-textGray"}
+              ${
+                hasUnread
+                  ? "text-primary font-semibold"
+                  : "text-textGray dark:text-[var(--color-textGray)]"
+              }
             `}
           >
             {label}
           </span>
 
-          {/* 🔥 badge se NE RENDERUJE ako nema poruka */}
           {hasUnread && (
             <span
               className="

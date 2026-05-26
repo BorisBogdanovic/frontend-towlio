@@ -29,13 +29,15 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
   const avatarUrl = isOwn ? authAvatarUrl : contactAvatarUrl;
 
   const bubbleClasses = isOwn
-    ? "bg-[#21409a] text-white shadow-md rounded-2xl rounded-br-sm"
-    : "bg-white text-gray-800 border border-gray-200 shadow-sm rounded-2xl rounded-bl-sm";
+    ? "bg-[#21409a] text-white shadow-md rounded-2xl rounded-br-sm dark:bg-[#2f5bff]"
+    : "bg-white text-gray-800 border border-gray-200 shadow-sm rounded-2xl rounded-bl-sm dark:bg-[#1e1e1e] dark:text-gray-100 dark:border-gray-700";
 
   return (
     <>
       <div
-        className={`mb-3 flex w-full ${isOwn ? "justify-end" : "justify-start"}`}
+        className={`mb-3 flex w-full ${
+          isOwn ? "justify-end" : "justify-start"
+        }`}
       >
         <div className="flex w-full min-w-0 items-end gap-3">
           {!isOwn && (
@@ -47,7 +49,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
           )}
 
           <div
-            className={`flex flex-1 flex-col ${isOwn ? "items-end" : "items-start"}`}
+            className={`flex flex-1 flex-col ${
+              isOwn ? "items-end" : "items-start"
+            }`}
           >
             <div
               className={`max-w-[70%] break-words px-4 py-2.5 text-sm transition ${bubbleClasses}`}
@@ -60,13 +64,15 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                       rel: "noopener noreferrer",
                       className: isOwn
                         ? "break-all text-white/90 underline"
-                        : "break-all text-[#21409a] underline",
+                        : "break-all text-[#21409a] underline dark:text-blue-400",
                     }}
                   >
                     {message}
                   </Linkify>
                 ) : (
-                  <span className="italic text-gray-400">Empty message</span>
+                  <span className="italic text-gray-400 dark:text-gray-500">
+                    Empty message
+                  </span>
                 ))}
 
               {type === "image" &&
@@ -78,19 +84,25 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                     className="mt-1 max-w-[220px] cursor-pointer rounded-xl object-cover shadow-md transition hover:scale-[1.02]"
                   />
                 ) : (
-                  <span className="italic text-gray-400">Loading image...</span>
+                  <span className="italic text-gray-400 dark:text-gray-500">
+                    Loading image...
+                  </span>
                 ))}
 
               {type === "file" &&
                 (fileUrl ? (
                   <FileMessageBubble fileUrl={fileUrl} isOwn={isOwn} />
                 ) : (
-                  <span className="italic text-gray-400">Loading file...</span>
+                  <span className="italic text-gray-400 dark:text-gray-500">
+                    Loading file...
+                  </span>
                 ))}
             </div>
 
             {time && (
-              <span className="mt-1 text-[11px] text-gray-400">{time}</span>
+              <span className="mt-1 text-[11px] text-gray-400 dark:text-gray-500">
+                {time}
+              </span>
             )}
           </div>
 
@@ -106,7 +118,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
       {previewImage && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm dark:bg-black/90"
           onClick={() => setPreviewImage(null)}
         >
           <img

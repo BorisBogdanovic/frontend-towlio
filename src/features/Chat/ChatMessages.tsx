@@ -7,7 +7,7 @@ import { getProfileImageUrl } from "../../utils/getProfileImageUrl";
 
 interface ChatMessagesProps {
   contactId: number;
-  uploadingImage?: File | null; // 🔥 NOVO
+  uploadingImage?: File | null;
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
@@ -27,7 +27,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // 🔥 scroll funkcija
   const scrollToBottom = useCallback(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -39,7 +38,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages.length, uploadingImage, scrollToBottom]); // 🔥 dodato uploadingImage
+  }, [messages.length, uploadingImage, scrollToBottom]);
 
   const formatMinute = (date: string) =>
     new Date(date).toLocaleTimeString("sr-RS", {
@@ -51,7 +50,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
   if (isLoading) {
     return (
-      <div className="h-full p-4 text-sm text-gray-400">Loading messages…</div>
+      <div className="h-full p-4 text-sm text-gray-400 dark:text-[var(--color-textLightGray)]">
+        Loading messages…
+      </div>
     );
   }
 
@@ -64,9 +65,13 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   return (
     <div
       ref={containerRef}
-      className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden bg-gray-50 p-4"
+      className="
+      flex-1 min-w-0 overflow-y-auto overflow-x-hidden
+      bg-gray-50 p-4
+
+      dark:bg-[var(--color-sectionBg)]
+    "
     >
-      {/* 🔥 EXISTING MESSAGES */}
       {messages.map((msg, index) => {
         const next = messages[index + 1];
 
@@ -98,19 +103,17 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         );
       })}
 
-      {/* 🔥 UPLOADING IMAGE PREVIEW */}
+      {/* UPLOADING IMAGE */}
       {uploadingImage && (
         <div className="flex justify-end mb-3">
           <div className="relative max-w-[200px]">
-            {/* IMAGE PREVIEW */}
             <img
               src={URL.createObjectURL(uploadingImage)}
               className="rounded-xl object-cover opacity-70"
             />
 
-            {/* LOADER */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="h-8 w-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="h-8 w-8 border-2 border-white border-t-transparent rounded-full animate-spin dark:border-[var(--color-textGray)] dark:border-t-transparent" />
             </div>
           </div>
         </div>

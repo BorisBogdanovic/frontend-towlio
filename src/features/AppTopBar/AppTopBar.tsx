@@ -1,4 +1,5 @@
 import Container from "../../ui/Container";
+import ThemeToggle from "../../ui/ThemeToggle";
 import DateAndTime from "./DateAndTime";
 import NotificationBar from "./NotificationBar";
 
@@ -8,7 +9,11 @@ function AppTopBar() {
       <Container>
         <div className="flex items-center justify-between py-3.5">
           <DateAndTime />
-          <NotificationBar />
+
+          <div className="flex items-center gap-3">
+            <NotificationBar />
+            <ThemeToggle />
+          </div>
         </div>
       </Container>
     </div>

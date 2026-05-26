@@ -15,8 +15,15 @@ function MainLayout() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 bg-white flex flex-col relative">
+      <div
+        className="
+        flex-1 flex flex-col relative
+        bg-white
+        dark:bg-[var(--color-sectionBg)]
+      "
+      >
         <GrediantBg />
+
         <AppTopBar />
 
         <main className="relative z-10 p-4 sm:p-6 flex-1 overflow-y-auto">

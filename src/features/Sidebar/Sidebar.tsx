@@ -23,39 +23,55 @@ function Sidebar() {
 
   const { data: users = [] } = useChatUsers("");
 
-  // 🔥 TOTAL UNREAD (UMESTO BOOLEAN)
   const totalUnread = users.reduce(
     (sum, u: ChatUser) => sum + (u.unread_count ?? 0),
     0,
   );
 
   return (
-    <nav className="fixed flex h-screen w-xs flex-col justify-between border-r border-r-disabledBorderGray bg-white px-4 py-8 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
+    <nav
+      className="
+      fixed flex h-screen w-xs flex-col justify-between 
+      bg-[var(--sidebar-bg)]
+      border-r border-[var(--color-disabledBorderGray)]
+      px-4 py-8 
+      shadow-[0_4px_4px_rgba(0,0,0,0.25)]
+    "
+    >
+      {/* TOP */}
       <div>
         <SidebarLogo />
+
         <SidebarSubheading>MENU</SidebarSubheading>
 
         <SidebarLink
           to="/"
-          icon={<HiChartPie className="h-6 w-6 text-iconColor" />}
+          icon={
+            <HiChartPie className="h-6 w-6 text-[var(--color-iconColor)]" />
+          }
           label="Business analytics"
         />
 
-        {/* 🔥 INBOX SA COUNTEROM */}
         <SidebarLink
           to="/inbox"
-          icon={<HiChatBubbleLeftRight className="h-6 w-6 text-iconColor" />}
+          icon={
+            <HiChatBubbleLeftRight className="h-6 w-6 text-[var(--color-iconColor)]" />
+          }
           label="Inbox"
           unreadCount={totalUnread}
         />
 
         <SidebarAccordion
-          icon={<HiBriefcase className="h-6 w-6 text-iconColor" />}
+          icon={
+            <HiBriefcase className="h-6 w-6 text-[var(--color-iconColor)]" />
+          }
           label="Clients"
         >
           <SidebarLink
             to="/create-client"
-            icon={<HiOutlinePlusSmall className="h-6 w-6 text-iconColor" />}
+            icon={
+              <HiOutlinePlusSmall className="h-6 w-6 text-[var(--color-iconColor)]" />
+            }
             label="Create Client"
             nested
           />
@@ -63,7 +79,7 @@ function Sidebar() {
           <SidebarLink
             to="/clients"
             icon={
-              <HiClipboardDocumentList className="h-6 w-6 text-iconColor" />
+              <HiClipboardDocumentList className="h-6 w-6 text-[var(--color-iconColor)]" />
             }
             label="All Clients"
             nested
@@ -72,12 +88,16 @@ function Sidebar() {
 
         {user?.is_admin && (
           <SidebarAccordion
-            icon={<HiUserGroup className="h-6 w-6 text-iconColor" />}
+            icon={
+              <HiUserGroup className="h-6 w-6 text-[var(--color-iconColor)]" />
+            }
             label="Salespeople"
           >
             <SidebarLink
               to="/create-user"
-              icon={<HiUserPlus className="h-6 w-6 text-iconColor" />}
+              icon={
+                <HiUserPlus className="h-6 w-6 text-[var(--color-iconColor)]" />
+              }
               label="Add Salesperson"
               nested
             />
@@ -85,7 +105,7 @@ function Sidebar() {
             <SidebarLink
               to="/users"
               icon={
-                <HiClipboardDocumentList className="h-6 w-6 text-iconColor" />
+                <HiClipboardDocumentList className="h-6 w-6 text-[var(--color-iconColor)]" />
               }
               label="Salespeople List"
               nested
@@ -94,16 +114,19 @@ function Sidebar() {
         )}
       </div>
 
+      {/* BOTTOM */}
       <div>
         <SidebarSubheading>SETTINGS</SidebarSubheading>
 
         <SidebarLink
           to="/settings"
-          icon={<HiMiniCog8Tooth className="h-6 w-6 text-iconColor" />}
+          icon={
+            <HiMiniCog8Tooth className="h-6 w-6 text-[var(--color-iconColor)]" />
+          }
           label="Settings"
         />
 
-        <div className="my-6 h-[1px] w-full bg-disabledBorderGray" />
+        <div className="my-6 h-[1px] w-full bg-[var(--color-disabledBorderGray)]" />
 
         {user && (
           <SidebarUserInfo

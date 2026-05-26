@@ -35,67 +35,65 @@ const ChatWindow = () => {
     };
   }, [dispatch]);
 
-  if (!selectedUser) return <EmptyChatPlaceholder />;
-
-  const handleSendText = (message: string) => {
-    sendMessage({
-      to_id: selectedUser.id,
-      message,
-      type: "text",
-    });
-  };
-
-  const handleSendImage = (file: File) => {
-    setUploadingImage(file);
-
-    sendMessage(
-      {
-        to_id: selectedUser.id,
-        type: "image",
-        file,
-      },
-      {
-        onSuccess: () => setUploadingImage(null),
-        onError: () => {
-          setUploadingImage(null);
-          toast.error("Failed to upload image");
-        },
-      },
-    );
-  };
-
-  const handleSendFile = (file: File) => {
-    sendMessage(
-      {
-        to_id: selectedUser.id,
-        type: "file",
-        file,
-      },
-      {
-        onError: () => {
-          toast.error("Failed to upload file");
-        },
-      },
-    );
-  };
-
   return (
-    <div className="flex h-full flex-1 flex-col bg-gray-50">
-      <ChatHeader
-        selectedUser={selectedUser}
-        getProfileImageUrl={getProfileImageUrl}
-      />
+    <div className="flex flex-1 flex-col">
+      {selectedUser ? (
+        <>
+          <ChatHeader
+            selectedUser={selectedUser}
+            getProfileImageUrl={getProfileImageUrl}
+          />
 
-      <ChatMessages
-        contactId={selectedUser.id}
-        uploadingImage={uploadingImage}
-      />
+          <ChatMessages
+            contactId={selectedUser.id}
+            uploadingImage={uploadingImage}
+          />
 
-      <ChatInput
-        onSend={handleSendText}
-        onSendImage={handleSendImage}
-        onSendFile={handleSendFile}
-      />
+          <ChatInput
+            onSend={(message) =>
+              sendMessage({
+                to_id: selectedUser.id,
+                message,
+                type: "text",
+              })
+            }
+            onSendImage={(file) => {
+              setUploadingImage(file);
+
+              sendMessage(
+                {
+                  to_id: selectedUser.id,
+                  type: "image",
+                  file,
+                },
+                {
+                  onSuccess: () => setUploadingImage(null),
+                  onError: () => {
+                    setUploadingImage(null);
+                    toast.error("Failed to upload image");
+                  },
+                },
+              );
+            }}
+            onSendFile={(file) => {
+              sendMessage(
+                {
+                  to_id: selectedUser.id,
+                  type: "file",
+                  file,
+                },
+                {
+                  onError: () => {
+                    toast.error("Failed to upload file");
+                  },
+                },
+              );
+            }}
+          />
+        </>
+      ) : (
+        <EmptyChatPlaceholder />
+      )}
     </div>
   );
 };

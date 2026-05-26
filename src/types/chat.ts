@@ -85,4 +85,5 @@ export interface ChatUser extends BaseUser {
   latest_message: string | null;
   latest_message_time: string | null;
   unread_count: number;
+  email: string;
 }
